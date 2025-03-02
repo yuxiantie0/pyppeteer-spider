@@ -1,4 +1,4 @@
-# Cookie Pool 管理系统
+# pyppeteer-spider 管理系统
 
 一个基于 Flask 的 Cookie 池管理系统，支持多站点 Cookie 管理、自动轮换和失效检测。系统包含 Web 界面和 API 接口，可以方便地进行 Cookie 的增删改查操作。
 
@@ -33,8 +33,8 @@
 
 1. 克隆项目并进入项目目录：
 ```bash
-git clone <repository-url>
-cd cookie-pool
+git clone https://github.com/yuxiantie0/pyppeteer-spider.git
+cd pyppeteer-spider
 ```
 
 2. 创建并激活虚拟环境：
@@ -73,8 +73,8 @@ python app.py
 
 1. 克隆项目并进入项目目录：
 ```bash
-git clone <repository-url>
-cd cookie-pool
+git clone https://github.com/yuxiantie0/pyppeteer-spider.git
+cd pyppeteer-spider
 ```
 
 2. 使用 Docker Compose 构建和启动：
