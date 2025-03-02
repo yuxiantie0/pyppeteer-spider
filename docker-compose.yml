@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   web:
-    build: .
     image: 303291556/spider-pyppeteer:latest
+    container_name: spider-pyppeteer
     ports:
-      - "5000:5000"
+      - "8002:5000"
     volumes:
       - ./instance:/app/instance
     environment:

@@ -71,27 +71,50 @@ python app.py
 
 ### 方式二：Docker 部署
 
-1. 克隆项目并进入项目目录：
+1. 创建 docker-compose.yml 文件：
 ```bash
-git clone https://github.com/yuxiantie0/pyppeteer-spider.git
-cd pyppeteer-spider
+# 创建文件
+touch docker-compose.yml
+
+# 将以下内容复制到 docker-compose.yml 文件中：
+services:
+  web:
+    image: 303291556/spider-pyppeteer:latest
+    container_name: spider-pyppeteer
+    ports:
+      - "8002:5000"
+    volumes:
+      - ./instance:/app/instance
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 ```
 
-2. 使用 Docker Compose 构建和启动：
+2. 创建必要的目录：
 ```bash
-# 构建并在前台运行（可以看到日志输出）
-docker-compose up --build
+mkdir -p instance/logs
+```
 
-# 或者在后台运行
+3. 启动服务（后台运行）：
+```bash
 docker-compose up -d
 ```
 
-3. 查看容器日志：
+服务将在后台启动，容器名称为 `spider-pyppeteer`，访问地址：http://localhost:8002
+
+4. 查看容器日志：
 ```bash
-docker-compose logs -f
+docker logs spider-pyppeteer
 ```
 
-4. 停止服务：
+5. 停止服务：
 ```bash
 docker-compose down
 ```
