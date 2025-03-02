@@ -4,6 +4,11 @@ from flask_migrate import Migrate
 from extensions import db
 from config.config import config
 from config.logging import init_logging
+from routes.auth import bp as auth_bp, login_required
+from models import User
+from routes import auth, website, cookie, spider
+from init_app import init_db
+from tasks import init_scheduler
 
 def create_app(config_name='default'):
     """创建Flask应用"""
@@ -26,16 +31,23 @@ def create_app(config_name='default'):
     init_logging(app)
 
     # 注册蓝图
-    from routes.website import bp as website_bp
-    from routes.cookie import bp as cookie_bp
-    from routes.spider import bp as spider_bp
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(website.bp)
+    app.register_blueprint(cookie.bp)
+    app.register_blueprint(spider.bp)
 
-    app.register_blueprint(website_bp)
-    app.register_blueprint(cookie_bp)
-    app.register_blueprint(spider_bp)
+    # 确保数据库和管理员账号存在
+    with app.app_context():
+        db.create_all()
+        init_db(app)
+
+    # 初始化定时任务
+    scheduler = init_scheduler()
+    app.scheduler = scheduler  # 将scheduler保存到app实例中
 
     # 添加根路由
     @app.route('/')
+    @login_required
     def index():
         return redirect(url_for('website.website_list'))
 
@@ -44,15 +56,9 @@ def create_app(config_name='default'):
 app = create_app(os.getenv('FLASK_ENV', 'default'))
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        
-        # 导入并初始化定时任务
-        from tasks import init_scheduler
-        scheduler = init_scheduler()
-        
-        try:
-            app.run(host='0.0.0.0', debug=True)
-        finally:
-            # 确保在应用退出时关闭定时任务
-            scheduler.shutdown() 
+    try:
+        app.run(host='0.0.0.0', debug=True)
+    finally:
+        # 确保在应用退出时关闭定时任务
+        if hasattr(app, 'scheduler'):
+            app.scheduler.shutdown() 

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{{ '编辑网站' if website is defined and website.id else '添加网站' }}</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">网站名称</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       value="{{ website.name if website is defined else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="identifier" class="form-label">标识符</label>
+                <input type="text" class="form-control" id="identifier" name="identifier" 
+                       value="{{ website.identifier if website is defined else '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="login_url" class="form-label">首页地址</label>
+                <input type="text" class="form-control" id="homepage" name="homepage" 
+                       value="{{ website.homepage if website is defined else '' }}" required>
+            </div>
+            <div class="text-end">
+                <a href="{{ url_for('website.website_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> 返回
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 保存
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

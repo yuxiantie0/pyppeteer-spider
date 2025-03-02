@@ -10,7 +10,7 @@ bp = Blueprint('cookie', __name__)
 @bp.route('/cookies')
 def cookie_list():
     cookies = Cookie.query.all()
-    return render_template('cookie_list.html', cookies=cookies)
+    return render_template('cookie/list.html', cookies=cookies)
 
 # 添加Cookie
 @bp.route('/cookie/add', methods=['GET', 'POST'])
@@ -26,7 +26,7 @@ def cookie_add():
         db.session.commit()
         return redirect(url_for('cookie.cookie_list'))
     websites = Website.query.all()
-    return render_template('cookie_form.html', websites=websites)
+    return render_template('cookie/form.html', websites=websites)
 
 # 编辑Cookie
 @bp.route('/cookie/edit/<int:id>', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def cookie_edit(id):
         db.session.commit()
         return redirect(url_for('cookie.cookie_list'))
     websites = Website.query.all()
-    return render_template('cookie_form.html', cookie=cookie, websites=websites)
+    return render_template('cookie/form.html', cookie=cookie, websites=websites)
 
 # 删除Cookie
 @bp.route('/cookie/delete/<int:id>')

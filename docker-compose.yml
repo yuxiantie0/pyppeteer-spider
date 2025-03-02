@@ -1,14 +1,15 @@
 services:
   web:
-    image: 303291556/spider-pyppeteer:latest
-    container_name: spider-pyppeteer
+    container_name: spider_pyppeteer
+    build: .
+    image: 303291556/spider-pyppeteer
     ports:
-      - "8002:5000"
+      - "5000:5000"
     volumes:
       - ./instance:/app/instance
     environment:
       - FLASK_ENV=production
-      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]

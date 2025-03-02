@@ -8,7 +8,7 @@ bp = Blueprint('website', __name__)
 @bp.route('/websites')
 def website_list():
     websites = Website.query.all()
-    return render_template('website_list.html', websites=websites)
+    return render_template('website/list.html', websites=websites)
 
 # 添加网站
 @bp.route('/website/add', methods=['GET', 'POST'])
@@ -22,7 +22,7 @@ def website_add():
         db.session.add(website)
         db.session.commit()
         return redirect(url_for('website.website_list'))
-    return render_template('website_form.html')
+    return render_template('website/form.html')
 
 # 编辑网站
 @bp.route('/website/edit/<int:id>', methods=['GET', 'POST'])
@@ -34,7 +34,7 @@ def website_edit(id):
         website.homepage = request.form['homepage']
         db.session.commit()
         return redirect(url_for('website.website_list'))
-    return render_template('website_form.html', website=website)
+    return render_template('website/form.html', website=website)
 
 # 删除网站
 @bp.route('/website/delete/<int:id>')
@@ -42,4 +42,4 @@ def website_delete(id):
     website = Website.query.get_or_404(id)
     db.session.delete(website)
     db.session.commit()
-    return redirect(url_for('website.website_list')) 
+    return redirect(url_for('website.list')) 

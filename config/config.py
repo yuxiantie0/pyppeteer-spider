@@ -27,7 +27,7 @@ class Config:
 class DevelopmentConfig(Config):
     """开发环境配置"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{Config.get_database_path("cookie_pool.db")}'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'instance', 'cookie_pool.db')
     
     # 日志配置
     LOG_LEVEL = 'DEBUG'
@@ -35,7 +35,7 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     """测试环境配置"""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = f'sqlite:///{Config.get_database_path("test.db")}'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'instance', 'test.db')
     
     # 禁用CSRF保护
     WTF_CSRF_ENABLED = False
@@ -47,7 +47,7 @@ class ProductionConfig(Config):
     """生产环境配置"""
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        f'sqlite:///{Config.get_database_path("cookie_pool.db")}'
+        'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(__file__))), 'instance', 'cookie_pool.db')
     
     # 安全配置
     SESSION_COOKIE_SECURE = True

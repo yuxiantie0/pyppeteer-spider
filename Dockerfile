@@ -35,4 +35,4 @@ RUN chmod -R 755 /app
 EXPOSE 5000
 
 # 启动命令
-CMD ["python", "app.py"] 
+CMD ["python", "app.py"]

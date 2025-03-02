@@ -1,4 +1,4 @@
-# pyppeteer-spider 管理系统
+# Cookie Pool 爬虫管理器
 
 一个基于 Flask 的 Cookie 池管理系统，支持多站点 Cookie 管理、自动轮换和失效检测。系统包含 Web 界面和 API 接口，可以方便地进行 Cookie 的增删改查操作。
 
@@ -16,11 +16,13 @@
 - 数据库迁移支持
 - 多环境配置支持
 - Docker 部署支持
+- 用户认证和权限管理
+- 管理员用户管理
 
 ## 系统要求
 
 ### 本地开发环境
-- Python 3.7+
+- Python 3.11+
 - Chrome/Chromium 浏览器（用于 pyppeteer）
 
 ### Docker 环境
@@ -51,73 +53,58 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. 初始化数据库：
+4. 初始化数据库和管理员账户：
 ```bash
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
+python init_app.py
 ```
 
 5. 启动应用：
 ```bash
-# 设置环境（可选，默认为development）
-# Windows
-set FLASK_ENV=development
-# Linux/Mac
-export FLASK_ENV=development
-
+# 开发环境启动
 python app.py
+
+# 或使用 gunicorn 启动（推荐生产环境使用）
+gunicorn -w 4 -b 0.0.0.0:5000 'app:app' --timeout 300
 ```
+
+应用将在 http://localhost:5000 上运行。默认管理员账户：
+- 用户名：admin
+- 密码：admin123
+- 邮箱：admin@example.com
 
 ### 方式二：Docker 部署
 
-1. 创建 docker-compose.yml 文件：
+1. 克隆项目并进入项目目录：
 ```bash
-# 创建文件
-touch docker-compose.yml
-
-# 将以下内容复制到 docker-compose.yml 文件中：
-services:
-  web:
-    image: 303291556/spider-pyppeteer:latest
-    container_name: spider-pyppeteer
-    ports:
-      - "8002:5000"
-    volumes:
-      - ./instance:/app/instance
-    environment:
-      - FLASK_ENV=production
-      - PYTHONUNBUFFERED=1
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+git clone https://github.com/yuxiantie0/pyppeteer-spider.git
+cd pyppeteer-spider
 ```
 
-2. 创建必要的目录：
+2. 构建并启动容器：
 ```bash
-mkdir -p instance/logs
-```
+# 构建镜像
+docker-compose build
 
-3. 启动服务（后台运行）：
-```bash
+# 启动容器（后台运行）
 docker-compose up -d
 ```
 
-服务将在后台启动，容器名称为 `spider-pyppeteer`，访问地址：http://localhost:8002
+3. 查看容器状态：
+```bash
+docker-compose ps
+```
 
 4. 查看容器日志：
 ```bash
-docker logs spider-pyppeteer
+docker-compose logs -f
 ```
 
 5. 停止服务：
 ```bash
 docker-compose down
 ```
+
+服务将在 http://localhost:5000 上运行，使用相同的默认管理员账户。
 
 ## 项目结构
 
@@ -295,6 +282,8 @@ flask db downgrade
 4. 请合理设置 Cookie 使用限制，避免对目标站点造成压力
 5. 生产环境部署前请修改 SECRET_KEY
 6. 建议启用 HTTPS 以保护 Cookie 数据安全
+7. 首次使用请及时修改默认管理员密码
+8. 请妥善保管管理员账户信息
 
 ### Docker 部署注意事项
 
@@ -309,4 +298,32 @@ flask db downgrade
 
 本项目采用 MIT 开源协议。详细信息请查看 [LICENSE](LICENSE) 文件。
 
-MIT 协议是一个宽松的协议，基本上允许任何人任何用途，包括商业用途。使用本项目代码时，请保留版权信息。 
+MIT 协议是一个宽松的协议，基本上允许任何人任何用途，包括商业用途。使用本项目代码时，请保留版权信息。
+
+## 用户管理
+
+系统内置用户认证和权限管理功能，包括：
+
+### 默认管理员账户
+- 用户名：admin
+- 密码：admin123
+
+### 用户功能
+- 登录/登出
+- 密码加密存储
+- 最后登录时间记录
+- 访问权限控制
+
+### 管理员功能
+- 用户管理（仅管理员可见）
+- 创建新用户
+- 编辑用户信息
+- 删除用户（admin 用户不可删除）
+- 设置用户权限
+
+### 安全特性
+- 密码加密存储
+- 登录状态检查
+- 管理员权限检查
+- 防止 admin 用户被删除
+- 会话管理 

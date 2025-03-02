@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{{ '编辑Cookie' if cookie is defined and cookie.id else '添加Cookie' }}</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="website_id" class="form-label">网站</label>
+                <select class="form-select" id="website_id" name="website_id" required>
+                    <option value="">请选择网站</option>
+                    {% for website in websites %}
+                    <option value="{{ website.id }}" 
+                            {{ 'selected' if cookie is defined and cookie.website_id == website.id else '' }}>
+                        {{ website.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="account" class="form-label">账号</label>
+                <input type="text" class="form-control" id="account" name="account" value="{{ cookie.account if cookie else '' }}" required>
+                <div class="form-text">请输入JSON格式的Cookie数据</div>
+            </div>
+            <div class="mb-3">
+                <label for="cookie_value" class="form-label">Cookie值</label>
+                <textarea class="form-control" id="cookie_value" name="cookie_value" rows="10" required>{{ cookie.cookie_value if cookie else '' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="note" class="form-label">备注</label>
+                <input type="text" class="form-control" id="note" name="note" value="{{ cookie.note if cookie else '' }}">
+            </div>
+            <div class="text-end">
+                <a href="{{ url_for('cookie.cookie_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> 返回
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> 保存
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
