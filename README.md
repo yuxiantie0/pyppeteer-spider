@@ -72,7 +72,7 @@ gunicorn -w 4 -b 0.0.0.0:5000 'app:app' --timeout 300
 - 密码：admin123
 - 邮箱：admin@example.com
 
-### 方式二：Docker 部署
+### 方式二：Docker 构建部署
 
 1. 克隆项目并进入项目目录：
 ```bash
@@ -102,6 +102,41 @@ docker-compose logs -f
 5. 停止服务：
 ```bash
 docker-compose down
+```
+
+### 方式三：DockerHub 部署
+
+1.构建并启动容器：
+```bash
+docker run -d \
+  --name spider_pyppeteer \
+  --privileged \
+  -p 5000:5000 \
+  -v $(pwd)/instance:/app/instance \
+  -e FLASK_ENV=production \
+  -e TZ=Asia/Shanghai \
+  --restart unless-stopped \
+  --health-cmd="curl -f http://localhost:5000/" \
+  --health-interval=30s \
+  --health-timeout=10s \
+  --health-retries=3 \
+  --health-start-period=40s \
+  303291556/spider-pyppeteer
+```
+
+3. 查看容器状态：
+```bash
+docker ps
+```
+
+4. 查看容器日志：
+```bash
+docker logs -f spider_pyppeteer
+```
+
+5. 停止服务：
+```bash
+docker stop spider_pyppeteer
 ```
 
 服务将在 http://localhost:5000 上运行，使用相同的默认管理员账户。

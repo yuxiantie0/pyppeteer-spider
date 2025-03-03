@@ -1,16 +1,17 @@
-version: '3.8'
-
 services:
   web:
+    container_name: spider_pyppeteer
     build: .
-    image: 303291556/spider-pyppeteer:latest
+    image: 303291556/spider-pyppeteer
+    # 启用特权模式
+    privileged: true
     ports:
       - "5000:5000"
     volumes:
       - ./instance:/app/instance
     environment:
       - FLASK_ENV=production
-      - PYTHONUNBUFFERED=1
+      - TZ=Asia/Shanghai
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/"]

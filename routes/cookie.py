@@ -104,8 +104,16 @@ def expire_cookie():
     cookie_value = request.form.get('cookie')
     if not cookie_value:
         return jsonify({'status': 'error', 'message': 'Cookie value is required'})
-    
-    cookie = Cookie.query.filter_by(cookie_value=cookie_value).first()
+
+    cookie_data = json.loads(cookie_value)
+    pin_id = ""
+    for item in cookie_data:
+        if item['name'] == 'pinId':
+            pin_id = item['value']
+            break
+
+    cookie = Cookie.query.filter(Cookie.cookie_value.like('%'+pin_id+'%')).first()
+    # cookie = Cookie.query.filter_by(cookie_value=cookie_value).first()
     if not cookie:
         return jsonify({'status': 'error', 'message': 'Cookie not found'})
     

@@ -50,6 +50,7 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     xdg-utils \
     wget \
+    vim \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制项目文件
@@ -64,6 +65,9 @@ RUN mkdir -p instance/logs
 
 # 设置权限
 RUN chmod -R 755 /app
+
+# 创建初始账号
+RUN python init_app.py
 
 # 暴露端口
 EXPOSE 5000
