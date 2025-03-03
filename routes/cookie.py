@@ -112,6 +112,9 @@ def expire_cookie():
             pin_id = item['value']
             break
 
+    if pin_id == "":
+        return jsonify({'status': 'error', 'message': 'Cookie pin id is required'})
+
     cookie = Cookie.query.filter(Cookie.cookie_value.like('%'+pin_id+'%')).first()
     # cookie = Cookie.query.filter_by(cookie_value=cookie_value).first()
     if not cookie:
