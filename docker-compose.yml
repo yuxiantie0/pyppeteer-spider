@@ -3,6 +3,8 @@ services:
     container_name: spider_pyppeteer
     build: .
     image: 303291556/spider-pyppeteer
+    # 启用特权模式
+    privileged: true
     ports:
       - "5000:5000"
     volumes:

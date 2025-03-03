@@ -11,6 +11,8 @@ class Spider:
         """创建浏览器实例"""
         launch_args = [
             '--disable-infobars',
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
             f'--window-size={BROWSER_CONFIG["window_size"]["width"]},{BROWSER_CONFIG["window_size"]["height"]}'
         ]
 
