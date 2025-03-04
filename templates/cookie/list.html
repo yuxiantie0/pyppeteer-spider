@@ -15,6 +15,7 @@
                     <tr>
                         <th>ID</th>
                         <th>网站</th>
+                        <th>用户名</th>
                         <th>状态</th>
                         <th>每日使用</th>
                         <th>总使用</th>
@@ -28,6 +29,7 @@
                     <tr>
                         <td>{{ cookie.id }}</td>
                         <td>{{ cookie.website.name }}</td>
+                        <td>{{ cookie.account }}</td>
                         <td>
                             <span class="badge bg-{{ 'success' if cookie.is_valid else 'danger' }}">
                                 {{ '有效' if cookie.is_valid else '无效' }}
