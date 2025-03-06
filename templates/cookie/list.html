@@ -37,7 +37,7 @@
                         </td>
                         <td>{{ cookie.daily_used }}</td>
                         <td>{{ cookie.total_used }}</td>
-                        <td>{{ cookie.last_used.strftime('%Y-%m-%d %H:%M:%S') if cookie.last_used else '未使用' }}</td>
+                        <td>{{ cookie.last_used_at.strftime('%Y-%m-%d %H:%M:%S') if cookie.last_used else '未使用' }}</td>
                         <td>{{ cookie.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                         <td>
                             <a href="{{ url_for('cookie.cookie_edit', id=cookie.id) }}" class="btn btn-sm btn-info">
