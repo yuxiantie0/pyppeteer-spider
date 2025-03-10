@@ -13,6 +13,7 @@ class Spider:
             '--disable-infobars',
             '--no-sandbox',
             '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled',
             f'--window-size={BROWSER_CONFIG["window_size"]["width"]},{BROWSER_CONFIG["window_size"]["height"]}'
         ]
 
@@ -63,6 +64,31 @@ class Spider:
                 'cookie': current_cookies,
                 'ua': used_ua
             }
+
+            # 随机延迟
+            def random_delay(min_seconds=0.5, max_seconds=2.0):
+                return random.uniform(min_seconds, max_seconds)
+
+            # 随机移动鼠标
+            async def random_move_mouse(page, x_min, x_max, y_min, y_max):
+                x = random.randint(x_min, x_max)
+                y = random.randint(y_min, y_max)
+                await page.mouse.move(x, y)
+
+
+
+            # 模拟用户行为
+            await asyncio.sleep(1*random_delay())  # 随机延迟
+            await page.mouse.move(50, 50)  # 随机移动鼠标
+            await random_move_mouse(page, 0, 800, 0, 600)
+            await asyncio.sleep(1*random_delay())
+            await page.mouse.down()
+            await asyncio.sleep(0.1*random_delay())
+            await page.mouse.up()
+            await asyncio.sleep(2*random_delay())
+            await page.keyboard.press('ArrowDown')  # 模拟键盘操作
+            await asyncio.sleep(1*random_delay())
+
 
             await page.close()
             await context.close()
