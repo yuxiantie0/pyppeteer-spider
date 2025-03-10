@@ -1,8 +1,12 @@
 import asyncio
 import logging
 import json
+import random
+
+import requests
 from flask import Blueprint, request, jsonify
 from utils.spider import Spider
+from config.settings import USER_AGENTS
 
 bp = Blueprint('spider', __name__)
 
@@ -35,4 +39,27 @@ def fetch():
         return jsonify({
             'status': 'error',
             'message': str(e)
-        }), 500 
+        }), 500
+
+@bp.route('/file_get_contents')
+def file_get_contents():
+    try:
+        url = request.args.get('url')
+        ua = request.args.get('ua')
+        if not url:
+            return jsonify({'status': 'error', 'message': 'URL is required'}), 400
+        logging.info("request:" + json.dumps(url, ensure_ascii=False, indent=2))
+        if not ua:
+            ua = random.choice(USER_AGENTS)
+        headers = {
+            'User-Agent': ua}
+
+        res = requests.get(url, headers=headers)
+        html = res.text
+        return html
+    except Exception as e:
+        logging.error(f"Error in fetch route: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
